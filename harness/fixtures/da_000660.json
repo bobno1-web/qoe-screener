@@ -1,0 +1,28 @@
+{
+  "_kind": "golden-fixture-DA",
+  "_independence": "손 정답은 감사받은 연결재무제표 주석에서 직접 판독. 도구 out/ 무관. XBRL/IR 혼용 없음(동일 사업보고서 감사받은 연결주석).",
+  "_purpose": "EBITDA D&A 검증 정답(감가상각비+무형자산상각비+리스 ROU). 손 판독·손 계산.",
+  "company": {
+    "corp_name": "SK하이닉스",
+    "stock_code": "000660"
+  },
+  "base_year": 2025,
+  "unit": "백만원",
+  "rcept_no": null,
+  "path": "성격별(경로a, combined)",
+  "hand": {
+    "영업이익_백만": 47206319,
+    "성격별_감가상각비및무형자산상각_백만": 13889639,
+    "유형자산_감가상각비_백만": 12663516,
+    "무형자산_상각비_백만": 830819,
+    "리스ROU_감가상각비_백만": 435783,
+    "리스ROU_판독": "리스 주석에 DepreciationRightofuseAssets 435,783 별도. 성격별 combined(13,889,639)=유형+무형+ROU-자본화(개발비) → ROU 내포.",
+    "투자부동산": "없음"
+  },
+  "expected": {
+    "operating_DA_add_백만": 13889639,
+    "EBITDA_백만": 61095958,
+    "lease_included": true,
+    "lease_basis": "성격별 combined(13,889,639) by-nature에 ROU 포함(별도 재가산 안 함). 자본화분(개발비) 제외로 개별합보다 40,479 작음=정상."
+  }
+}

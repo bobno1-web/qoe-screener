@@ -1,0 +1,47 @@
+# ── 비밀정보: 절대 커밋 금지 ──────────────────────────────
+# API 키는 웹앱에선 메모리에만 두고(디스크 저장 안 함), CLI 에선 .env 로만 쓴다.
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets.*
+**/apikey*
+**/api_key*
+
+# ── 파이썬 ────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+
+# ── 실행 산출물 / 캐시 ────────────────────────────────────
+# out/ 는 실행하면 다시 생기는 산출물. 단 데모(out/results/)와 안내(out/README.md)는 보존.
+out/*
+!out/results/
+!out/results/**
+!out/README.md
+
+# OpenDART 원본 스냅샷 캐시(대용량·재생성 가능)
+out/_raw/
+
+# ── .claude 로컬 상태 ─────────────────────────────────────
+# 프로젝트 규칙/훅/스킬(.claude/rules·hooks·skills)은 커밋한다. 단 개인·세션 로컬 상태는 제외.
+.claude/settings.local.json
+.claude/**/*.local.*
+.claude/.session*
+.claude/todos*
+
+# ── 개발 임시 ─────────────────────────────────────────────
+*.log
+scratchpad/
+.scratch/
+
+# ── OS / 에디터 ───────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

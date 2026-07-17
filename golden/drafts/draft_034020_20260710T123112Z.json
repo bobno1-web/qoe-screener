@@ -1,0 +1,51 @@
+{
+  "_kind": "golden-draft",
+  "_purpose": "AI 초안(과잉포함). 정답 아님 — 사람이 golden/ratified/ 로 승인하기 전엔 채점에 쓰지 않는다.",
+  "_prompt_source": "golden/draft-prompt/draft_golden_candidates.md (도구 프롬프트와 분리)",
+  "generated_at": "2026-07-10T12:32:19.175690+00:00",
+  "company": {
+    "corp_code": "00159616",
+    "corp_name": "두산에너빌리티",
+    "stock_code": "034020"
+  },
+  "source": {
+    "source": "opendart:document.xml",
+    "rcept_no": "20260320001246",
+    "base_year": 2025,
+    "report_nm": "사업보고서 (2025.12)",
+    "document_name": "연결감사보고서",
+    "sections_present": [
+      "핵심감사사항",
+      "기타사항"
+    ],
+    "section_char_len": {
+      "핵심감사사항": 144,
+      "기타사항": 123
+    },
+    "notes": null
+  },
+  "model": "claude-opus-4-8",
+  "repeat": 2,
+  "draft_candidate_count": 0,
+  "citation_flagged_count": 0,
+  "citation_flagged": [],
+  "draft_candidates": [],
+  "runs_raw": [
+    {
+      "run_index": 0,
+      "parse_ok": true,
+      "parse_error": null,
+      "call_error": null,
+      "candidate_count": 0,
+      "candidates": []
+    },
+    {
+      "run_index": 1,
+      "parse_ok": true,
+      "parse_error": null,
+      "call_error": null,
+      "candidate_count": 0,
+      "candidates": []
+    }
+  ]
+}

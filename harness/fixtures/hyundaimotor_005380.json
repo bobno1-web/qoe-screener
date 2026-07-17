@@ -1,0 +1,40 @@
+{
+  "_kind": "golden-fixture",
+  "_purpose": "screen 루프1 검증용 산수 정답 (엣지케이스: 영업활동현금흐름 음수 연도 → ocf_below_oi=true, 지속연수>0, 비율<1, 발생액 양수).",
+  "_unit": "KRW million (백만원). 감사받은 연결재무제표 표시 단위 그대로.",
+  "_independence": "값 출처는 현대자동차 감사받은 '연결' 재무제표(K-IFRS). 도구 out/ 과 무관. 영업이익=연결 손익계산서 Operating profit, 영업활동현금흐름=연결 현금흐름표 Net cash provided by (used in) operating activities. 2023 영업현금흐름 음수는 금융부문 할부금융채권(영업자산) 증가 때문이며 명세로 재검증됨: 영업창출현금 3,099,595 + 이자수취 1,672,380 - 이자지급 4,237,818 + 배당수취 840,925 - 법인세납부 3,893,842 = -2,518,760.",
+  "company": {
+    "corp_code": "00164742",
+    "corp_name": "현대자동차",
+    "stock_code": "005380"
+  },
+  "fs_div": "CFS",
+  "sources": [
+    {
+      "years": [2023, 2022],
+      "statement": "Hyundai Motor Company and its subsidiaries — Consolidated Statements of Profit or Loss & Cash Flows (audited, K-IFRS), years ended Dec 31 2023 and 2022",
+      "url": "https://www.hyundai.com/content/dam/hyundai/ww/en/images/company/investor-relations/financial-Information/report-en/2023/2023-q4-consolidated-audit-report-en.pdf",
+      "read": "Operating profit 2023=15,126,901 / 2022=9,824,928 ; Net cash provided by (used in) operating activities 2023=(2,518,760) / 2022=10,627,311 (In millions of KRW)"
+    }
+  ],
+  "series": {
+    "2022": {"operating_income": 9824928,  "operating_cash_flow": 10627311},
+    "2023": {"operating_income": 15126901, "operating_cash_flow": -2518760}
+  },
+  "expected": {
+    "years_count": 2,
+    "first_year": 2022,
+    "last_year": 2023,
+    "per_year": {
+      "2022": {"accruals": -802383,   "ocf_below_oi": false},
+      "2023": {"accruals": 17645661,  "ocf_below_oi": true}
+    },
+    "cumulative_operating_income": 24951829,
+    "cumulative_operating_cash_flow": 8108551,
+    "cumulative_accruals": 16843278,
+    "cumulative_divergence_ratio_approx": "0.324969",
+    "cumulative_divergence_ratio_note": null,
+    "consecutive_recent_years_ocf_below_oi": 1,
+    "_hand_notes": "2022 발생액=9824928-10627311=-802383 (OCF10.63M>OI9.82M=false). 2023 발생액=15126901-(-2518760)=17645661 (OCF-2.52M<OI15.13M=true). 누적OI=9824928+15126901=24951829. 누적OCF=10627311+(-2518760)=8108551. 발생액=24951829-8108551=16843278. 비율=8108551/24951829=0.32497 (<1). 지속연수: 최근연도(2023) true→1, 그 앞(2022) false→중단 → 1."
+  }
+}

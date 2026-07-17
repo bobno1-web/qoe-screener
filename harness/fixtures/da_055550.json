@@ -1,0 +1,37 @@
+{
+  "_kind": "golden-fixture-DA",
+  "_independence": "손 정답은 감사받은 연결재무제표 주석에서 직접 판독. 도구 out/ 무관. XBRL/IR 혼용 없음(동일 사업보고서 감사받은 연결주석).",
+  "_purpose": "EBITDA D&A 검증 정답(감가상각비+무형자산상각비+리스 ROU). 손 판독·손 계산.",
+  "company": {
+    "corp_name": "신한지주",
+    "stock_code": "055550"
+  },
+  "base_year": 2025,
+  "unit": "백만원",
+  "rcept_no": null,
+  "path": "개별주석 합산(경로b) — 성격별 주석 없음(어려운 합산 경로)",
+  "hand": {
+    "영업이익_백만": 7023357,
+    "유형자산_감가상각비_백만_incl_ROU": 598890,
+    "유형자산_자체_백만": 263955,
+    "리스ROU_감가상각비_백만_컬럼내포": 334935,
+    "무형자산_상각비_백만": 478694,
+    "운용리스자산_감가상각비_백만_영업": 445157,
+    "운용리스_판독": "리스주석(19)·기타영업손익(44)에 DepreciationOfOperatingLeaseAssets(OtherOperatingExpense) 445,157 — 은행 운용리스(대여자) 자산 감가, 영업비용. 유형자산 총액(598,890)에 없음(별도 자산풀).",
+    "보험취득현금흐름_상각_백만_모호": 422286,
+    "보험_판독": "보험서비스비용 내 IFRS17 취득현금흐름 상각 422,286. EBITDA D&A 포함 여부는 자체 논쟁(자산상각 아님).",
+    "투자부동산_감가상각비_백만_B": 16922
+  },
+  "expected": {
+    "tool_operating_DA_add_백만": 1077584,
+    "tool_EBITDA_백만": 8100941,
+    "hand_operating_DA_add_백만": 1522741,
+    "hand_EBITDA_백만": 8546098,
+    "lease_ROU_included": true,
+    "lease_ROU_double_counted": false,
+    "operating_lease_asset_dep_MISSED_백만": 445157,
+    "understatement_백만": 445157,
+    "understatement_pct": "약 5.5% (EBITDA 대비)",
+    "note": "ROU(334,935)는 유형자산 총액 내포 → 이중계상 가드 작동(1회 포함, 정확). 그러나 운용리스자산 감가상각비(445,157)는 유형/무형/ROU 밖이라 경로b 합산에서 누락 → D&A·EBITDA 과소. 보험 취득현금흐름 상각(422,286)도 미포착(모호)."
+  }
+}

@@ -1,0 +1,9 @@
+#!/bin/sh
+# golden-set-integrity 게이트: out/ -> golden/ 유입 차단.
+# 설치(저장소 초기화 후): cp .claude/hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+# 위반(exit 1)이면 커밋이 막힌다. 문서: .claude/hooks/golden-no-out-copy.md
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+python "$ROOT/harness/check_golden_no_out.py" || {
+  echo "[pre-commit] golden/ 에 out/ 기원 파일이 있어 커밋을 막습니다 (golden-set-integrity)."
+  exit 1
+}

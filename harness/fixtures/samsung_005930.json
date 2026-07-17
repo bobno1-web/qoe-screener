@@ -1,0 +1,64 @@
+{
+  "_kind": "golden-fixture",
+  "_purpose": "screen 루프1 검증용 산수 정답. out/ 도구출력이 아니라 독립 출처(감사받은 연결재무제표)에서 손으로 읽고 손으로 누적을 계산한 정답. golden/ 아니고 harness/ 에 둔다(산수 정답).",
+  "_unit": "KRW million (백만원). 감사받은 연결재무제표 표시 단위 그대로. 참고: OpenDART fnlttSinglAcntAll 원시응답은 원(won) 단위이므로 실API 실행 시 누적/발생액은 x1,000,000 스케일로 나온다(비율/지속연수는 단위 불변). 여기선 API키 없이 compute layer만 검증하므로 백만원 스케일로 고정.",
+  "_independence": "값 출처는 삼성전자 감사받은 '연결' 재무제표(K-IFRS). 도구 out/ 과 무관. 영업이익=연결 손익계산서 Operating profit, 영업활동현금흐름=연결 현금흐름표 Net cash provided by operating activities.",
+  "company": {
+    "corp_code": "00126380",
+    "corp_name": "삼성전자",
+    "stock_code": "005930"
+  },
+  "fs_div": "CFS",
+  "sources": [
+    {
+      "years": [2024, 2023],
+      "statement": "Samsung Electronics consolidated statements of profit or loss & cash flows (audited, K-IFRS)",
+      "url": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/2024_con_quarter04_all.pdf",
+      "read": "Operating profit 2024=32,725,961 / 2023=6,566,976 ; Net cash provided by operating activities 2024=72,982,621 / 2023=44,137,427 (In millions of KRW)"
+    },
+    {
+      "years": [2022, 2021],
+      "statement": "Samsung Electronics consolidated statements (audited, K-IFRS)",
+      "url": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/2022_con_quarter04_all.pdf",
+      "read": "Operating profit 2022=43,376,630 / 2021=51,633,856 ; Net cash from operating activities 2022=62,181,346 / 2021=65,105,448"
+    },
+    {
+      "years": [2021, 2020],
+      "statement": "Samsung Electronics consolidated statements (audited, K-IFRS)",
+      "url": "https://images.samsung.com/is/content/samsung/assets/global/ir/docs/2021_con_quarter04_all.pdf",
+      "read": "Operating profit 2021=51,633,856 / 2020=35,993,876 ; Net cash from operating activities 2021=65,105,448 / 2020=65,287,009"
+    },
+    {
+      "years": [2024, 2023, 2022, 2021],
+      "statement": "cross-check OCF (stockanalysis.com, KRW millions)",
+      "url": "https://stockanalysis.com/quote/otc/SSNLF/financials/cash-flow-statement/",
+      "read": "OCF 2024=72,982,621 ; 2023=44,137,427 ; 2022=62,181,346 ; 2021=65,105,448 (일치)"
+    }
+  ],
+  "series": {
+    "2020": {"operating_income": 35993876, "operating_cash_flow": 65287009},
+    "2021": {"operating_income": 51633856, "operating_cash_flow": 65105448},
+    "2022": {"operating_income": 43376630, "operating_cash_flow": 62181346},
+    "2023": {"operating_income": 6566976,  "operating_cash_flow": 44137427},
+    "2024": {"operating_income": 32725961, "operating_cash_flow": 72982621}
+  },
+  "expected": {
+    "years_count": 5,
+    "first_year": 2020,
+    "last_year": 2024,
+    "per_year": {
+      "2020": {"accruals": -29293133, "ocf_below_oi": false},
+      "2021": {"accruals": -13471592, "ocf_below_oi": false},
+      "2022": {"accruals": -18804716, "ocf_below_oi": false},
+      "2023": {"accruals": -37570451, "ocf_below_oi": false},
+      "2024": {"accruals": -40256660, "ocf_below_oi": false}
+    },
+    "cumulative_operating_income": 170297299,
+    "cumulative_operating_cash_flow": 309693851,
+    "cumulative_accruals": -139396552,
+    "cumulative_divergence_ratio_approx": "1.818547",
+    "cumulative_divergence_ratio_note": null,
+    "consecutive_recent_years_ocf_below_oi": 0,
+    "_hand_notes": "누적OI=35993876+51633856+43376630+6566976+32725961=170297299. 누적OCF=65287009+65105448+62181346+44137427+72982621=309693851. 발생액=170297299-309693851=-139396552. 비율=309693851/170297299=1.8185.. (>1, OCF>OI). 매년 OCF>OI 라 ocf_below_oi 전부 false → 지속연수 0."
+  }
+}

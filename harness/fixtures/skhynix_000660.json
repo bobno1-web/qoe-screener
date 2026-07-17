@@ -1,0 +1,40 @@
+{
+  "_kind": "golden-fixture",
+  "_purpose": "screen 루프1 검증용 산수 정답 (엣지케이스: 영업손실 연도 → 누적 영업이익 음수 → 비율 음수).",
+  "_unit": "KRW million (백만원). 감사받은 연결재무제표 표시 단위 그대로.",
+  "_independence": "값 출처는 SK하이닉스 감사받은 '연결' 재무제표(K-IFRS). 도구 out/ 과 무관. 영업이익=연결 포괄손익계산서 Operating profit (loss), 영업활동현금흐름=연결 현금흐름표 Net cash provided by operating activities.",
+  "company": {
+    "corp_code": "00164779",
+    "corp_name": "SK하이닉스",
+    "stock_code": "000660"
+  },
+  "fs_div": "CFS",
+  "sources": [
+    {
+      "years": [2023, 2022],
+      "statement": "SK hynix Inc. and Subsidiaries — Consolidated Statements of Comprehensive Income (Loss) & Cash Flows (audited, K-IFRS), years ended Dec 31 2023 and 2022",
+      "url": "https://uploads3.craft.co/uploads/operating_source/document/1098220/336b619333a74c6c.pdf",
+      "read": "Operating profit (loss) 2023=(7,730,313) / 2022=6,809,417 ; Net cash provided by operating activities 2023=4,278,191 / 2022=14,780,517 (In millions of KRW)"
+    }
+  ],
+  "series": {
+    "2022": {"operating_income": 6809417,  "operating_cash_flow": 14780517},
+    "2023": {"operating_income": -7730313, "operating_cash_flow": 4278191}
+  },
+  "expected": {
+    "years_count": 2,
+    "first_year": 2022,
+    "last_year": 2023,
+    "per_year": {
+      "2022": {"accruals": -7971100,  "ocf_below_oi": false},
+      "2023": {"accruals": -12008504, "ocf_below_oi": false}
+    },
+    "cumulative_operating_income": -920896,
+    "cumulative_operating_cash_flow": 19058708,
+    "cumulative_accruals": -19979604,
+    "cumulative_divergence_ratio_approx": "-20.6960",
+    "cumulative_divergence_ratio_note": null,
+    "consecutive_recent_years_ocf_below_oi": 0,
+    "_hand_notes": "2022 발생액=6809417-14780517=-7971100. 2023 발생액=-7730313-4278191=-12008504. 누적OI=6809417+(-7730313)=-920896 (음수!). 누적OCF=14780517+4278191=19058708. 발생액=-920896-19058708=-19979604. 비율=19058708/(-920896)=-20.696.. (누적OI 음수라 비율 음수, 하지만 0 아님이므로 note=null). ocf_below_oi: 2022 OCF14.78M>OI6.81M=false, 2023 OCF4.28M > OI(-7.73M)=false → 최근연도(2023) false → 지속연수 0."
+  }
+}

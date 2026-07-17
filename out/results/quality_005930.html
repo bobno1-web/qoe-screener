@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>삼성전자 이익의 질</title>
+<style>
+  :root { --ink:#1c2530; --muted:#5b6b7b; --line:#d7dee6; --bg:#f4f6f9; --card:#fff;
+          --accent:#2f4a63; --pill:#eef2f6; --hl:#fde68a; --spark:#2f4a63; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Malgun Gothic",sans-serif;
+         color:var(--ink); background:var(--bg); }
+  .wrap { max-width:980px; margin:0 auto; padding:22px 18px 80px; }
+  h1 { font-size:22px; margin:0 0 2px; }
+  h2 { font-size:16px; margin:0 0 3px; }
+  .sub { color:var(--muted); font-size:13px; margin-bottom:16px; }
+  .pagenav { display:flex; gap:8px; margin:0 0 16px; font-size:13px; flex-wrap:wrap; }
+  .pagenav a, .pagenav span { border:1px solid var(--line); border-radius:20px; padding:5px 13px;
+      text-decoration:none; color:var(--accent); background:var(--card); }
+  .pagenav .cur { background:var(--accent); color:#fff; border-color:var(--accent); font-weight:600; }
+  .note { color:var(--muted); font-size:12.5px; line-height:1.7; margin:-6px 0 18px; }
+  .note b { color:var(--ink); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:18px; margin:0 0 16px; }
+  .card .desc { color:var(--muted); font-size:13px; margin:2px 0 12px; }
+  .num { font-variant-numeric:tabular-nums; }
+  table.q { width:100%; border-collapse:collapse; font-size:13.5px; }
+  table.q th, table.q td { padding:7px 8px; border-bottom:1px solid #eef1f4; text-align:right;
+      font-variant-numeric:tabular-nums; white-space:nowrap; }
+  table.q th { color:var(--muted); font-weight:600; border-bottom:1px solid var(--line); }
+  table.q th:first-child, table.q td:first-child { text-align:left; }
+  table.q tr.cum td { font-weight:700; border-top:2px solid var(--ink); }
+  table.q td.na { color:#9aa7b3; }
+  .metahd { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .spark { margin:4px 0 2px; }
+  .srcrow { margin-top:11px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .srcrow .lbl { font-size:12px; color:var(--muted); }
+  .src { background:none; border:1px solid var(--line); color:var(--accent); border-radius:6px;
+         font-size:12px; padding:2px 9px; cursor:pointer; }
+  .src:hover { background:var(--pill); }
+  .empty { color:var(--muted); font-size:13.5px; padding:6px 2px; }
+  /* 모달 + 재구성 재무제표 표 */
+  .ov { position:fixed; inset:0; background:rgba(20,28,38,.5); display:none; align-items:center;
+        justify-content:center; padding:20px; z-index:10; }
+  .ov.on { display:flex; }
+  .modal { background:#fff; border-radius:10px; max-width:640px; width:100%; padding:20px; max-height:84vh; overflow:auto; }
+  .modal h3 { margin:0 0 4px; font-size:16px; padding-right:24px; }
+  .modal .loc { color:var(--muted); font-size:13px; margin-bottom:10px; }
+  .modal .x { float:right; border:none; background:none; font-size:22px; cursor:pointer; color:var(--muted); line-height:1; }
+  .istbl { width:100%; border-collapse:collapse; font-size:14px; margin:8px 0 4px; }
+  .istbl td { padding:7px 6px; border-bottom:1px solid #eef1f4; }
+  .istbl .isval { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .istbl .isval .jo { color:var(--muted); font-weight:400; font-size:12px; margin-left:3px; }
+  .istbl tr.hl td { background:var(--hl); font-weight:700; }
+  .modal .meta { color:var(--muted); font-size:12px; margin-top:10px; }
+  footer { color:var(--muted); font-size:12px; margin-top:26px; }
+</style></head><body><div class="wrap">
+  <h1 id="h-title"></h1>
+  <div class="sub" id="h-sub"></div>
+  <div class="pagenav">
+    <span class="cur">① 이익의 질</span>
+    <a id="nav2" href="#">② 조정 EBITDA — 일회성 걷어내기 →</a>
+  </div>
+  <div class="note"><b>읽는 법.</b> 이 페이지는 재무제표 숫자로 "이 회사가 보고한 영업이익을 믿을 수 있나"를
+    본다. <b>임계·색·등급으로 판정하지 않는다</b> — 산업마다 정상 범위가 다르기 때문이다(제조는 재고가 크고
+    서비스는 없다). 숫자와 추이만 정직하게 내고, 판정은 감사인이 한다. 동종업계 비교는 하지 않고 한 회사의
+    자기 추이만 본다. 모든 숫자에 <b>원문보기</b>(재무제표 라인)를 달았다.</div>
+  <div id="cards"></div>
+  <footer id="foot"></footer>
+</div>
+<div class="ov" id="ov"><div class="modal">
+  <button class="x" onclick="closeSrc()">×</button>
+  <h3 id="m-title"></h3>
+  <div class="loc" id="m-loc"></div>
+  <div id="m-body"></div>
+  <div class="meta" id="m-meta"></div>
+</div></div>
+<script>const DATA = {"schema_version": "quality-view/1", "generated_at": "2026-07-15T06:36:14.583030+00:00", "note": "이익의 질 — 재무제표 숫자로만 결정론 계산. 임계·색·등급 판정 없음(산업마다 정상 범위가 달라 도구가 선을 긋지 않는다). 숫자·추이만 내고 판정은 사람이 한다.", "company": {"corp_code": "00126380", "corp_name": "삼성전자", "stock_code": "005930"}, "base_year": 2025, "years": [2021, 2022, 2023, 2024, 2025], "unit_note": "표의 금액 단위: 백만원. 비율·일수는 그대로. 원값(원)은 원문보기에서 확인.", "metrics": {"years": [2021, 2022, 2023, 2024, 2025], "oi_vs_ocf": {"per_year": [{"year": 2021, "operating_income": 51633856000000, "operating_cash_flow": 65105448000000, "accrual": -13471592000000}, {"year": 2022, "operating_income": 43376630000000, "operating_cash_flow": 62181346000000, "accrual": -18804716000000}, {"year": 2023, "operating_income": 6566976000000, "operating_cash_flow": 44137427000000, "accrual": -37570451000000}, {"year": 2024, "operating_income": 32725961000000, "operating_cash_flow": 72982621000000, "accrual": -40256660000000}, {"year": 2025, "operating_income": 43601051000000, "operating_cash_flow": 85315148000000, "accrual": -41714097000000}], "cumulative": {"operating_income": 177904474000000, "operating_cash_flow": 329721990000000, "accrual": -151817516000000}}, "accrual_ratio": {"per_year": [{"year": 2021, "accrual": -13471592000000, "over_assets": -0.031577411826349225, "over_revenue": -0.048180832547155245}, {"year": 2022, "accrual": -18804716000000, "over_assets": -0.041935076487690716, "over_revenue": -0.0622196055366326}, {"year": 2023, "accrual": -37570451000000, "over_assets": -0.08240833120899183, "over_revenue": -0.14509579362650066}, {"year": 2024, "accrual": -40256660000000, "over_assets": -0.0782393788305639, "over_revenue": -0.13380044264366767}, {"year": 2025, "accrual": -41714097000000, "over_assets": -0.07357734813524436, "over_revenue": -0.12504003151166931}]}, "receivables_turnover": {"per_year": [{"year": 2021, "trade_receivables": 40713415000000, "revenue": 279604799000000, "over_revenue": 0.1456105730145211, "days": 53.1478591503002}, {"year": 2022, "trade_receivables": 35721563000000, "revenue": 302231360000000, "over_revenue": 0.11819277456846304, "days": 43.14036271748901}, {"year": 2023, "trade_receivables": 36647393000000, "revenue": 258935494000000, "over_revenue": 0.1415309752783448, "days": 51.65880597659585}, {"year": 2024, "trade_receivables": 43623073000000, "revenue": 300870903000000, "over_revenue": 0.14498933783570292, "days": 52.92110831003156}, {"year": 2025, "trade_receivables": 51127642000000, "revenue": 333605938000000, "over_revenue": 0.15325758979745738, "days": 55.93902027607194}]}, "inventory_turnover": {"per_year": [{"year": 2021, "inventories": 41384404000000, "cost_of_sales": 166411342000000, "over_cogs": 0.24868740016530844, "days": 90.77090106033758}, {"year": 2022, "inventories": 52187866000000, "cost_of_sales": 190041770000000, "over_cogs": 0.27461260753359645, "days": 100.23360174976271}, {"year": 2023, "inventories": 51625874000000, "cost_of_sales": 180388580000000, "over_cogs": 0.286192584918624, "days": 104.46029349529775}, {"year": 2024, "inventories": 51754865000000, "cost_of_sales": 186562268000000, "over_cogs": 0.2774133567029749, "days": 101.25587519658583}, {"year": 2025, "inventories": 52636828000000, "cost_of_sales": 202235513000000, "over_cogs": 0.26027490038309936, "days": 95.00033863983127}]}, "ebitda_vs_ocf": {"available": true, "base_year": 2025, "ebitda": 90527643000000, "operating_cash_flow": 85315148000000, "difference": 5212495000000, "na_reason": null}, "operating_margin": {"per_year": [{"year": 2021, "operating_income": 51633856000000, "revenue": 279604799000000, "margin": 0.18466727389754137}, {"year": 2022, "operating_income": 43376630000000, "revenue": 302231360000000, "margin": 0.1435212745626397}, {"year": 2023, "operating_income": 6566976000000, "revenue": 258935494000000, "margin": 0.02536143615753196}, {"year": 2024, "operating_income": 32725961000000, "revenue": 300870903000000, "margin": 0.10877077402197313}, {"year": 2025, "operating_income": 43601051000000, "revenue": 333605938000000, "margin": 0.1306962677624761}]}}, "sources": {"revenue": {"statement_name": "손익계산서", "lines": [{"concept": "ifrs-full_Revenue", "label": "매출액", "amount_won": 333605938000000, "amount_million": 333605938.0, "highlight": true}, {"concept": "ifrs-full_CostOfSales", "label": "매출원가", "amount_won": 202235513000000, "amount_million": 202235513.0, "highlight": false}, {"concept": "ifrs-full_GrossProfit", "label": "매출총이익", "amount_won": 131370425000000, "amount_million": 131370425.0, "highlight": false}, {"concept": "dart_TotalSellingGeneralAdministrativeExpenses", "label": "판매비와관리비", "amount_won": 87769374000000, "amount_million": 87769374.0, "highlight": false}, {"concept": "dart_OperatingIncomeLoss", "label": "영업이익", "amount_won": 43601051000000, "amount_million": 43601051.0, "highlight": false}], "period_year": 2025}, "cost_of_sales": {"statement_name": "손익계산서", "lines": [{"concept": "ifrs-full_Revenue", "label": "매출액", "amount_won": 333605938000000, "amount_million": 333605938.0, "highlight": false}, {"concept": "ifrs-full_CostOfSales", "label": "매출원가", "amount_won": 202235513000000, "amount_million": 202235513.0, "highlight": true}, {"concept": "ifrs-full_GrossProfit", "label": "매출총이익", "amount_won": 131370425000000, "amount_million": 131370425.0, "highlight": false}, {"concept": "dart_TotalSellingGeneralAdministrativeExpenses", "label": "판매비와관리비", "amount_won": 87769374000000, "amount_million": 87769374.0, "highlight": false}, {"concept": "dart_OperatingIncomeLoss", "label": "영업이익", "amount_won": 43601051000000, "amount_million": 43601051.0, "highlight": false}], "period_year": 2025}, "operating_income": {"statement_name": "손익계산서", "lines": [{"concept": "ifrs-full_Revenue", "label": "매출액", "amount_won": 333605938000000, "amount_million": 333605938.0, "highlight": false}, {"concept": "ifrs-full_CostOfSales", "label": "매출원가", "amount_won": 202235513000000, "amount_million": 202235513.0, "highlight": false}, {"concept": "ifrs-full_GrossProfit", "label": "매출총이익", "amount_won": 131370425000000, "amount_million": 131370425.0, "highlight": false}, {"concept": "dart_TotalSellingGeneralAdministrativeExpenses", "label": "판매비와관리비", "amount_won": 87769374000000, "amount_million": 87769374.0, "highlight": false}, {"concept": "dart_OperatingIncomeLoss", "label": "영업이익", "amount_won": 43601051000000, "amount_million": 43601051.0, "highlight": true}], "period_year": 2025}, "operating_cash_flow": {"statement_name": "현금흐름표", "lines": [{"concept": "ifrs-full_CashFlowsFromUsedInOperatingActivities", "label": "영업활동현금흐름", "amount_won": 85315148000000, "amount_million": 85315148.0, "highlight": true}, {"concept": "ifrs-full_CashFlowsFromUsedInInvestingActivities", "label": "투자활동현금흐름", "amount_won": -68512206000000, "amount_million": -68512206.0, "highlight": false}, {"concept": "ifrs-full_CashFlowsFromUsedInFinancingActivities", "label": "재무활동현금흐름", "amount_won": -13478040000000, "amount_million": -13478040.0, "highlight": false}], "period_year": 2025}, "total_assets": {"statement_name": "재무상태표(자산)", "lines": [{"concept": "ifrs-full_CurrentAssets", "label": "유동자산", "amount_won": 247684612000000, "amount_million": 247684612.0, "highlight": false}, {"concept": "ifrs-full_CurrentTradeReceivables", "label": "매출채권", "amount_won": 51127642000000, "amount_million": 51127642.0, "highlight": false}, {"concept": "ifrs-full_Inventories", "label": "재고자산", "amount_won": 52636828000000, "amount_million": 52636828.0, "highlight": false}, {"concept": "ifrs-full_NoncurrentAssets", "label": "비유동자산", "amount_won": 319257498000000, "amount_million": 319257498.0, "highlight": false}, {"concept": "ifrs-full_Assets", "label": "자산총계", "amount_won": 566942110000000, "amount_million": 566942110.0, "highlight": true}], "period_year": 2025}, "trade_receivables": {"statement_name": "재무상태표(자산)", "lines": [{"concept": "ifrs-full_CurrentAssets", "label": "유동자산", "amount_won": 247684612000000, "amount_million": 247684612.0, "highlight": false}, {"concept": "ifrs-full_CurrentTradeReceivables", "label": "매출채권", "amount_won": 51127642000000, "amount_million": 51127642.0, "highlight": true}, {"concept": "ifrs-full_Inventories", "label": "재고자산", "amount_won": 52636828000000, "amount_million": 52636828.0, "highlight": false}, {"concept": "ifrs-full_NoncurrentAssets", "label": "비유동자산", "amount_won": 319257498000000, "amount_million": 319257498.0, "highlight": false}, {"concept": "ifrs-full_Assets", "label": "자산총계", "amount_won": 566942110000000, "amount_million": 566942110.0, "highlight": false}], "period_year": 2025}, "inventories": {"statement_name": "재무상태표(자산)", "lines": [{"concept": "ifrs-full_CurrentAssets", "label": "유동자산", "amount_won": 247684612000000, "amount_million": 247684612.0, "highlight": false}, {"concept": "ifrs-full_CurrentTradeReceivables", "label": "매출채권", "amount_won": 51127642000000, "amount_million": 51127642.0, "highlight": false}, {"concept": "ifrs-full_Inventories", "label": "재고자산", "amount_won": 52636828000000, "amount_million": 52636828.0, "highlight": true}, {"concept": "ifrs-full_NoncurrentAssets", "label": "비유동자산", "amount_won": 319257498000000, "amount_million": 319257498.0, "highlight": false}, {"concept": "ifrs-full_Assets", "label": "자산총계", "amount_won": 566942110000000, "amount_million": 566942110.0, "highlight": false}], "period_year": 2025}}, "line_used": {"revenue": {"account_id": "ifrs-full_Revenue", "account_nm": "매출액", "sj_div": "IS", "match": "account_id", "amount_won": 333605938000000}, "cost_of_sales": {"account_id": "ifrs-full_CostOfSales", "account_nm": "매출원가", "sj_div": "IS", "match": "account_id", "amount_won": 202235513000000}, "operating_income": {"account_id": "dart_OperatingIncomeLoss", "account_nm": "영업이익", "sj_div": "IS", "match": "account_id", "amount_won": 43601051000000}, "operating_cash_flow": {"account_id": "ifrs-full_CashFlowsFromUsedInOperatingActivities", "account_nm": "영업활동현금흐름", "sj_div": "CF", "match": "account_id", "amount_won": 85315148000000}, "total_assets": {"account_id": "ifrs-full_Assets", "account_nm": "자산총계", "sj_div": "BS", "match": "account_id", "amount_won": 566942110000000}, "trade_receivables": {"account_id": "ifrs-full_CurrentTradeReceivables", "account_nm": "매출채권", "sj_div": "BS", "match": "account_id", "amount_won": 51127642000000}, "inventories": {"account_id": "ifrs-full_Inventories", "account_nm": "재고자산", "sj_div": "BS", "match": "account_id", "amount_won": 52636828000000}}, "meta": {"years_count": 5, "sources_present": ["cost_of_sales", "inventories", "operating_cash_flow", "operating_income", "revenue", "total_assets", "trade_receivables"], "screen_source": "005930"}};</script>
+<script>
+var Y = DATA.years || [];
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function fmtM(won){ // 원 → 백만원, 콤마. null 은 '—'
+  if(won==null) return '<span class="na">—</span>';
+  var m = Math.round(won/1e6);
+  return (m<0?'('+Math.abs(m).toLocaleString()+')':m.toLocaleString());
+}
+function fmtRatio(r,dp){ if(r==null) return '<span class="na">—</span>'; return r.toFixed(dp==null?3:dp); }
+function fmtPct(r){ if(r==null) return '<span class="na">—</span>'; return (r*100).toFixed(2)+'%'; }
+function fmtDays(d){ if(d==null) return '<span class="na">—</span>'; return d.toFixed(1)+'일'; }
+
+// 단색 스파크라인(판정색 아님 — 추이 모양만). 값 배열에서 SVG polyline.
+function spark(vals, w, h){
+  w=w||220; h=h||34; var pad=3;
+  var xs=[], present=vals.map(function(v){return v==null?null:v;});
+  var nums=present.filter(function(v){return v!=null;});
+  if(nums.length<2) return '';
+  var mn=Math.min.apply(null,nums), mx=Math.max.apply(null,nums);
+  var rng=(mx-mn)||1, n=vals.length;
+  var pts=[];
+  for(var i=0;i<n;i++){ if(present[i]==null) continue;
+    var x=pad+(n===1?0:(w-2*pad)*i/(n-1));
+    var y=h-pad-(h-2*pad)*(present[i]-mn)/rng;
+    pts.push(x.toFixed(1)+','+y.toFixed(1));
+  }
+  // 0 기준선(값에 음수·양수가 섞이면 표시 — 판정색 아닌 옅은 회선)
+  var zero='';
+  if(mn<0 && mx>0){ var zy=h-pad-(h-2*pad)*(0-mn)/rng; zero='<line x1="'+pad+'" y1="'+zy.toFixed(1)+'" x2="'+(w-pad)+'" y2="'+zy.toFixed(1)+'" stroke="#c9d2db" stroke-width="1" stroke-dasharray="3 3"/>'; }
+  return '<svg class="spark" width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'">'+zero+
+    '<polyline fill="none" stroke="var(--spark)" stroke-width="1.6" points="'+pts.join(' ')+'"/></svg>';
+}
+
+function srcBtn(key,label){ if(!DATA.sources[key]) return '';
+  return '<button class="src" onclick="openSrc(\''+key+'\')">원문보기 · '+esc(label)+'</button>'; }
+
+function yearCols(){ return Y.map(function(y){return '<th>'+y+'</th>';}).join(''); }
+function rowByYear(vals, fmt){ return Y.map(function(y,i){
+  var v=vals[i]; var isna=(v==null||(v.na===true));
+  return '<td'+(isna?' class="na"':'')+'>'+fmt(v)+'</td>'; }).join(''); }
+
+function card(title, desc, inner){
+  return '<div class="card"><div class="metahd"><h2>'+esc(title)+'</h2></div>'+
+    '<div class="desc">'+desc+'</div>'+inner+'</div>';
+}
+
+function build(){
+  document.getElementById('h-title').textContent = (DATA.company.corp_name||'')+' — 이익의 질';
+  document.getElementById('h-sub').textContent = '재무제표 기준 · '+(Y.length?(Y[0]+'~'+Y[Y.length-1]):'')+' · 페이지 1 / 2';
+  var s=DATA.company.stock_code||'';
+  document.getElementById('nav2').setAttribute('href','screen_'+s+'.html');
+  var C=[];
+  var M=DATA.metrics;
+
+  // 1) 영업이익 vs 영업현금흐름
+  (function(){ var p=M.oi_vs_ocf.per_year, cu=M.oi_vs_ocf.cumulative;
+    var t='<table class="q"><tr><th>연도(백만원)</th>'+yearCols()+'<th>누적</th></tr>';
+    t+='<tr><td>영업이익</td>'+p.map(function(r){return '<td>'+fmtM(r.operating_income)+'</td>';}).join('')+'<td>'+fmtM(cu.operating_income)+'</td></tr>';
+    t+='<tr><td>영업현금흐름</td>'+p.map(function(r){return '<td>'+fmtM(r.operating_cash_flow)+'</td>';}).join('')+'<td>'+fmtM(cu.operating_cash_flow)+'</td></tr>';
+    t+='<tr class="cum"><td>발생액 (영업이익 − 영업현금흐름)</td>'+p.map(function(r){return '<td>'+fmtM(r.accrual)+'</td>';}).join('')+'<td>'+fmtM(cu.accrual)+'</td></tr>';
+    t+='</table>';
+    t+=spark(p.map(function(r){return r.accrual==null?null:r.accrual/1e6;}));
+    t+='<div class="srcrow"><span class="lbl">원문:</span>'+srcBtn('operating_income','영업이익')+srcBtn('operating_cash_flow','영업현금흐름')+'</div>';
+    C.push(card('1. 영업이익 vs 영업현금흐름 (핵심)',
+      '이익이 현금으로 뒷받침되는지. 발생액 = 영업이익 − 영업현금흐름. 발생액이 계속 크게 (+)면 이익이 현금보다 앞서 잡힌 것 — 왜인지는 원문·주석으로 확인. 판정은 하지 않는다.', t)); })();
+
+  // 2) 발생액 비율
+  (function(){ var p=M.accrual_ratio.per_year;
+    var t='<table class="q"><tr><th>연도</th>'+yearCols()+'</tr>';
+    t+='<tr><td>발생액 ÷ 총자산</td>'+rowByYear(p,function(r){return fmtPct(r.over_assets);})+'</tr>';
+    t+='<tr><td>발생액 ÷ 매출</td>'+rowByYear(p,function(r){return fmtPct(r.over_revenue);})+'</tr>';
+    t+='</table>';
+    t+=spark(p.map(function(r){return r.over_assets==null?null:r.over_assets;}));
+    t+='<div class="srcrow"><span class="lbl">원문:</span>'+srcBtn('total_assets','자산총계')+srcBtn('revenue','매출')+'</div>';
+    C.push(card('2. 발생액 비율',
+      '발생액을 규모(총자산·매출)로 나눠 회사 크기와 무관하게 본다. 절대액이 커도 규모 대비 작을 수 있다.', t)); })();
+
+  // 3) 매출채권 회전
+  (function(){ var p=M.receivables_turnover.per_year;
+    var t='<table class="q"><tr><th>연도(백만원)</th>'+yearCols()+'</tr>';
+    t+='<tr><td>매출채권</td>'+p.map(function(r){return '<td>'+fmtM(r.trade_receivables)+'</td>';}).join('')+'</tr>';
+    t+='<tr><td>매출</td>'+p.map(function(r){return '<td>'+fmtM(r.revenue)+'</td>';}).join('')+'</tr>';
+    t+='<tr><td>매출채권 ÷ 매출</td>'+rowByYear(p,function(r){return fmtRatio(r.over_revenue);})+'</tr>';
+    t+='<tr class="cum"><td>회수기간(일)</td>'+rowByYear(p,function(r){return fmtDays(r.days);})+'</tr>';
+    t+='</table>';
+    t+=spark(p.map(function(r){return r.days==null?null:r.days;}));
+    t+='<div class="srcrow"><span class="lbl">원문:</span>'+srcBtn('trade_receivables','매출채권')+srcBtn('revenue','매출')+'</div>';
+    C.push(card('3. 매출채권 회전',
+      '매출보다 채권이 빨리 늘면(회수기간이 길어지면) 아직 안 받은 돈으로 매출을 인식했을 가능성. 산업별 정상 범위가 다르니 추이로 본다.', t)); })();
+
+  // 4) 재고 회전
+  (function(){ var p=M.inventory_turnover.per_year;
+    var t='<table class="q"><tr><th>연도(백만원)</th>'+yearCols()+'</tr>';
+    t+='<tr><td>재고자산</td>'+p.map(function(r){return '<td>'+fmtM(r.inventories)+'</td>';}).join('')+'</tr>';
+    t+='<tr><td>매출원가</td>'+p.map(function(r){return '<td>'+fmtM(r.cost_of_sales)+'</td>';}).join('')+'</tr>';
+    t+='<tr><td>재고 ÷ 매출원가</td>'+rowByYear(p,function(r){return fmtRatio(r.over_cogs);})+'</tr>';
+    t+='<tr class="cum"><td>재고일수(일)</td>'+rowByYear(p,function(r){return fmtDays(r.days);})+'</tr>';
+    t+='</table>';
+    t+=spark(p.map(function(r){return r.days==null?null:r.days;}));
+    t+='<div class="srcrow"><span class="lbl">원문:</span>'+srcBtn('inventories','재고자산')+srcBtn('cost_of_sales','매출원가')+'</div>';
+    C.push(card('4. 재고 회전',
+      '재고가 매출원가보다 빨리 쌓이면(재고일수가 늘면) 나중에 평가손실로 터질 수 있다. 재고가 없는 회사는 해당 없음.', t)); })();
+
+  // 5) EBITDA vs 영업현금흐름
+  (function(){ var e=M.ebitda_vs_ocf; var t;
+    if(!e.available){ t='<div class="empty">'+esc(e.na_reason||'EBITDA 산출물 없음')+'</div>'; }
+    else{
+      t='<table class="q"><tr><th>'+e.base_year+'년(백만원)</th><th>금액</th></tr>';
+      t+='<tr><td>EBITDA (영업이익 + 가산 D&amp;A)</td><td>'+fmtM(e.ebitda)+'</td></tr>';
+      t+='<tr><td>영업현금흐름</td><td>'+fmtM(e.operating_cash_flow)+'</td></tr>';
+      t+='<tr class="cum"><td>차이 (EBITDA − 영업현금흐름)</td><td>'+fmtM(e.difference)+'</td></tr>';
+      t+='</table>';
+      t+='<div class="srcrow"><span class="lbl">원문:</span>'+srcBtn('operating_cash_flow','영업현금흐름')+
+         '<span class="lbl">· EBITDA 구성은 페이지 2 브릿지에서</span></div>';
+    }
+    C.push(card('5. EBITDA vs 영업현금흐름',
+      'EBITDA(우리가 계산한 것)와 실제 영업현금흐름의 차이. 차이가 크면 운전자본(재고·채권 증가 등)이 이익을 현금에서 갉아먹고 있는 것. D&amp;A 는 기준연도만 뽑으므로 기준연도 1개를 비교한다.', t)); })();
+
+  // 6) 영업이익률
+  (function(){ var p=M.operating_margin.per_year;
+    var t='<table class="q"><tr><th>연도(백만원)</th>'+yearCols()+'</tr>';
+    t+='<tr><td>영업이익</td>'+p.map(function(r){return '<td>'+fmtM(r.operating_income)+'</td>';}).join('')+'</tr>';
+    t+='<tr><td>매출</td>'+p.map(function(r){return '<td>'+fmtM(r.revenue)+'</td>';}).join('')+'</tr>';
+    t+='<tr class="cum"><td>영업이익률</td>'+rowByYear(p,function(r){return fmtPct(r.margin);})+'</tr>';
+    t+='</table>';
+    t+=spark(p.map(function(r){return r.margin==null?null:r.margin;}));
+    t+='<div class="srcrow"><span class="lbl">원문:</span>'+srcBtn('operating_income','영업이익')+srcBtn('revenue','매출')+'</div>';
+    C.push(card('6. 영업이익률 추이',
+      '영업이익 ÷ 매출. 갑자기 좋아졌거나 나빠졌으면 왜인지 확인 대상 — 일회성인지(페이지 2)·추정 변화인지.', t)); })();
+
+  document.getElementById('cards').innerHTML = C.join('');
+  var lu = DATA.line_used||{};
+  var used = Object.keys(lu).filter(function(k){return lu[k] && lu[k].account_id;}).length;
+  document.getElementById('foot').innerHTML =
+    '결정론 계산(LLM 없음) · 개념코드 기반 추출 · 기준연도 '+esc(DATA.base_year)+' · 라인 '+used+'개 확인 · '+
+    '생성 '+esc((DATA.generated_at||'').slice(0,10))+'. 임계·색·등급 판정 없음 — 판정은 사람이.';
+}
+
+// ── 원문보기 모달: 재구성 재무제표 표에 해당 줄 하이라이트 ──
+function openSrc(key){
+  var st=DATA.sources[key]; if(!st) return;
+  var lu=(DATA.line_used||{})[key]||{};
+  document.getElementById('m-title').textContent = st.statement_name+' — 원문 재구성';
+  document.getElementById('m-loc').textContent =
+    (st.period_year? st.period_year+'년 · ':'')+'XBRL 재무제표에서 표준 개념코드로 재구성(계정명 매칭 아님). 노란 줄이 지표에 쓴 값.';
+  var h='<table class="istbl">';
+  st.lines.forEach(function(ln){
+    h+='<tr'+(ln.highlight?' class="hl"':'')+'><td>'+esc(ln.label)+'</td>'+
+       '<td class="isval">'+ln.amount_won.toLocaleString()+'<span class="jo"> ('+Math.round(ln.amount_million).toLocaleString()+' 백만)</span></td></tr>';
+  });
+  h+='</table>';
+  document.getElementById('m-body').innerHTML=h;
+  document.getElementById('m-meta').innerHTML = lu.account_id?
+    ('쓴 라인: <b>'+esc(lu.account_nm||'')+'</b> · 개념코드 '+esc(lu.account_id)+' · 표 '+esc(lu.sj_div||'')+
+     ' · 매칭 '+esc(lu.match||'')) : '';
+  document.getElementById('ov').classList.add('on');
+}
+function closeSrc(){ document.getElementById('ov').classList.remove('on'); }
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeSrc(); });
+document.getElementById('ov').addEventListener('click',function(e){ if(e.target===this) closeSrc(); });
+build();
+</script>
+</body></html>

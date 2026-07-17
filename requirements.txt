@@ -1,0 +1,7 @@
+# qoe-normalizer 런타임 의존성
+# - extract(OpenDART JSON/ZIP)와 screen 산수는 표준 라이브러리(urllib 등)만 쓴다.
+# - anthropic·beautifulsoup4 는 surface 경로에서만 필요하며, 오프라인/픽스처/목 실행은 둘 다 없어도 돈다(지연 임포트).
+# - flask 는 로컬 웹앱(start_qoe) 진입점에 필요하다. CLI 로만 돌리면 없어도 된다.
+anthropic>=0.40        # surface: Claude(Opus 4.8) 호출 (temperature 미지원 → 사고과정 지정 프롬프트)
+beautifulsoup4>=4.12   # extract/audit_sections: 감사보고서 USERMARK 구조 파싱
+flask>=3.0             # web: 로컬 웹앱 서버(src/web/app.py · 127.0.0.1 전용, 호스팅 안 함)

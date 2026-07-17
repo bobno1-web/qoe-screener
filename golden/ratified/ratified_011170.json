@@ -1,0 +1,59 @@
+{
+  "_kind": "golden-ratified",
+  "_purpose": "사람이 '유지'로 승인한 정답. 채점 기준(golden-set-integrity). out/ 무관.",
+  "ratified_at": "2026-07-10T16:27:40.309952+00:00",
+  "source": "human review: harness/review/review_candidates.csv (판정=유지)",
+  "company": {
+    "stock_code": "011170",
+    "corp_name": "롯데케미칼"
+  },
+  "count": 4,
+  "items": [
+    {
+      "cand_id": "e8128a75d3",
+      "항목명": "LC Titan 현금창출단위 손상차손",
+      "인용": "당기 손상검사수행 결과 LC Titan 현금창출단위에서 463,874백만원의 손상차손을 인식하였습니다(주석 13, 14 참조).",
+      "주석위치": "핵심감사사항 (1) / 주석 13, 14",
+      "왜_담았나": "특정 CGU의 당기 손상차손으로 매기 반복된다고 보기 어려운 일회성 성격의 손실.",
+      "확신": "높음",
+      "citation_verbatim_present": true,
+      "source_draft": "draft_011170_20260710T123112Z.json",
+      "human_verdict": "유지"
+    },
+    {
+      "cand_id": "604efeae2b",
+      "항목명": "롯데에너지머티리얼즈㈜ 영업권 손상차손",
+      "인용": "당기 손상검사 수행 결과 485,614백만원의 손상차손을 인식하였습니다(주석 16 참조).",
+      "주석위치": "핵심감사사항 (2) / 주석 16",
+      "왜_담았나": "영업권 손상차손은 특정 시점 회수가능액 하락에 따른 비반복적 손실 성격.",
+      "확신": "높음",
+      "citation_verbatim_present": true,
+      "source_draft": "draft_011170_20260710T123112Z.json",
+      "human_verdict": "유지"
+    },
+    {
+      "cand_id": "989b2c35dc",
+      "항목명": "올레핀사업부·아로마틱사업부 현금창출단위 손상검사 관련 손상차손 여부",
+      "인용": "연결회사의 올레핀사업부(대산공장 및 여수공장) 및 아로마틱사업부, LOTTE Chemical Titan Holding Berhad와 그 종속기업(이하\"LC Titan\")의 현금창출단위에 손상징후가 존재한다고 판단하여 손상검사를 수행하였습니다.",
+      "주석위치": "핵심감사사항 (1) / 주석 13, 14",
+      "왜_담았나": "손상징후로 손상검사를 수행한 사업부로, 추가 손상차손 인식 가능성 및 비반복적 성격을 확인 필요.",
+      "확신": "중간",
+      "citation_verbatim_present": false,
+      "source_draft": "draft_011170_20260710T123112Z.json",
+      "human_verdict": "유지"
+    },
+    {
+      "cand_id": "a0cb5b6104",
+      "항목명": "롯데에너지머티리얼즈㈜ 지분 53.3% 취득(사업결합)",
+      "인용": "연결회사는 2023년 3월 14일 롯데에너지머티리얼즈㈜의 지분 53.3%를 2,537,698백만원에 취득하였습니다.",
+      "주석위치": "핵심감사사항 (2)",
+      "왜_담았나": "당기 발생한 대규모 사업결합 거래로, 취득 관련 일회성 손익·거래비용·염가매수차익 등이 존재할 여지가 있음.",
+      "확신": "낮음",
+      "citation_verbatim_present": true,
+      "source_draft": "draft_011170_20260710T123112Z.json",
+      "human_verdict": "유지"
+    }
+  ],
+  "in_scope_count": 4,
+  "_scope_note": "count 4 는 승인 이력 그대로 보존. out-of-scope 0건은 scope 표시로 재분류(삭제 아님). 리콜 분모 in-scope=4."
+}
