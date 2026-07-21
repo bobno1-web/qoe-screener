@@ -4,24 +4,31 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>아이센스 조정 EBITDA</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <style>
-  :root { --ink:#1c2530; --muted:#5b6b7b; --line:#d7dee6; --bg:#f4f6f9; --card:#fff;
-          --accent:#2f4a63; --pill:#eef2f6; --caution:#8a6d1f; --cautionbg:#fbf4dd; --hl:#fde68a; }
+  /* 디자인 시스템(모노톤): 잉크 #1a1a1a · 보조 #5f6764 · 힌트 #9aa19e · 테두리 #e5e7eb ·
+     패널 #f7f8f8 · 배경 #fff · 음수만 #b4462b. 강조색·왼쪽 강조선·그라데이션 없음. 폰트 Pretendard.
+     * class/id·HTML 구조·JS 무변경 — 스타일 값만 교체(계산·토글·모달 로직 불변). */
+  :root { --ink:#1a1a1a; --muted:#5f6764; --hint:#9aa19e; --line:#e5e7eb; --bg:#ffffff; --card:#fff;
+          --panel:#f7f8f8; --accent:#1a1a1a; --pill:#eef0f0; --caution:#5f6764; --cautionbg:#f7f8f8;
+          --hl:#fde68a; --neg:#b4462b; }
   * { box-sizing:border-box; }
-  body { margin:0; font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Malgun Gothic",sans-serif;
-         color:var(--ink); background:var(--bg); }
+  body { margin:0; font:15px/1.6 "Pretendard",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Malgun Gothic",sans-serif;
+         color:var(--ink); background:var(--bg); -webkit-font-smoothing:antialiased; }
   .wrap { max-width:980px; margin:0 auto; padding:22px 18px 80px; }
-  h1 { font-size:22px; margin:0 0 2px; }
-  h2 { font-size:16px; margin:0 0 12px; letter-spacing:.02em; }
+  h1 { font-size:22px; margin:0 0 2px; letter-spacing:-.01em; }
+  h2 { font-size:16px; margin:0 0 12px; letter-spacing:-.01em; }
   .sub { color:var(--muted); font-size:13px; margin-bottom:18px; }
   /* 페이지 네비(표시용 링크 — 재계산·게이트와 무관) */
   .pagenav { display:flex; gap:8px; margin:0 0 16px; font-size:13px; flex-wrap:wrap; }
-  .pagenav a, .pagenav span { border:1px solid var(--line); border-radius:20px; padding:5px 13px;
-      text-decoration:none; color:var(--accent); background:var(--card); }
+  .pagenav a, .pagenav span { border:1px solid var(--line); border-radius:999px; padding:5px 13px;
+      text-decoration:none; color:var(--ink); background:var(--card); }
   .pagenav .cur { background:var(--accent); color:#fff; border-color:var(--accent); font-weight:600; }
-  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:18px; margin:0 0 18px; }
-  .caution { border-left:4px solid var(--caution); background:var(--cautionbg); color:#4a3d12;
-             padding:10px 14px; border-radius:6px; margin:0 0 10px; font-size:13.5px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; margin:0 0 18px;
+          box-shadow:0 1px 2px rgba(20,20,20,.04),0 8px 24px -18px rgba(20,20,20,.18); }
+  /* 주의 배너 — 왼쪽 강조선 제거, 패널 + 얇은 테두리 + 잉크 텍스트로 */
+  .caution { background:var(--cautionbg); border:1px solid var(--line); color:var(--ink);
+             padding:10px 14px; border-radius:10px; margin:0 0 10px; font-size:13.5px; }
   .num { font-variant-numeric:tabular-nums; }
   /* 헤드라인 */
   .headline { display:flex; flex-wrap:wrap; gap:10px 24px; align-items:baseline; margin:2px 0 16px; }
@@ -40,66 +47,69 @@
   .stmt .eqrow .val2 { font-size:17px; }
   .detail { margin-top:14px; border-top:1px dashed var(--line); padding-top:10px; }
   .detail table { width:100%; border-collapse:collapse; font-size:13px; }
-  .detail td { padding:5px 6px; border-bottom:1px solid #eef1f4; }
+  .detail td { padding:5px 6px; border-bottom:1px solid var(--line); }
   .detail .val2 { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
   /* 목록 */
-  .row { display:flex; align-items:flex-start; gap:10px; padding:10px 4px; border-bottom:1px solid #eef1f4; }
+  .row { display:flex; align-items:flex-start; gap:10px; padding:10px 4px; border-bottom:1px solid var(--line); }
   .row:last-child { border-bottom:none; }
   .row .amt { margin-left:auto; text-align:right; font-weight:600; white-space:nowrap; font-variant-numeric:tabular-nums; }
   .row .nm { font-weight:500; }
   .pills { margin-top:3px; }
   .pill { display:inline-block; font-size:11px; color:var(--muted); background:var(--pill);
-          border:1px solid var(--line); border-radius:20px; padding:1px 8px; margin:2px 4px 0 0; }
-  .pill.warn { color:var(--caution); background:var(--cautionbg); border-color:#e6d8a8; }
-  .pill.ok { color:#25603f; background:#e7f4ec; border-color:#bfe0cc; }
+          border:1px solid var(--line); border-radius:999px; padding:1px 8px; margin:2px 4px 0 0; }
+  .pill.warn { color:var(--muted); background:var(--pill); border-color:var(--line); }
+  .pill.ok { color:#2f3634; background:#e4e7e6; border-color:#d3d8d6; }
   .legend { font-size:12px; color:var(--muted); line-height:1.7; margin:-8px 0 16px; }
   .legend b { color:var(--ink); font-weight:600; }
-  input[type=checkbox] { width:17px; height:17px; margin-top:2px; flex:0 0 auto; }
-  .src { background:none; border:1px solid var(--line); color:var(--accent); border-radius:6px;
+  input[type=checkbox] { width:17px; height:17px; margin-top:2px; flex:0 0 auto; accent-color:var(--ink); }
+  .src { background:none; border:1px solid var(--line); color:var(--ink); border-radius:8px;
          font-size:12px; padding:2px 9px; cursor:pointer; margin-top:2px; }
-  .src:hover { background:var(--pill); }
-  .disabled { color:#9aa7b3; }
+  .src:hover { background:var(--panel); }
+  .disabled { color:var(--hint); }
   .row.child { margin-left:30px; }
   .row.child .nm { font-weight:400; }
   .tree { color:var(--muted); margin-right:4px; }
   .lockmsg { font-size:12px; color:var(--muted); margin-top:3px; }
   /* 수동 조정 스위치(불명 항목 — 사람이 원문 확인 후 직접 포함) */
   .manbox { display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; margin-top:7px;
-            padding:8px 10px; border:1px dashed var(--line); border-radius:8px; background:#fbfcfe; }
+            padding:8px 10px; border:1px dashed var(--line); border-radius:10px; background:var(--panel); }
   .manlbl { display:inline-flex; align-items:center; gap:6px; font-size:12.5px; color:var(--ink);
             cursor:pointer; font-weight:500; }
   .manbox select { font:inherit; font-size:12.5px; padding:2px 6px; border:1px solid var(--line);
-                   border-radius:6px; color:var(--ink); background:#fff; }
-  .manbox select:disabled { color:#9aa7b3; }
+                   border-radius:8px; color:var(--ink); background:#fff; }
+  .manbox select:disabled { color:var(--hint); }
   .manhint { font-size:12px; color:var(--muted); margin:2px 0 10px; }
-  /* 1단계 확정 배지(✓ 산술로 증명) vs 2단계 추정 배지(⚠ 근접 추측) — 확신과 추측을 시각적으로 구분 */
-  .confbox { font-size:12.5px; color:#1f4e3a; background:#e7f4ec; border:1px solid #bfe0cc;
-             border-radius:8px; padding:8px 11px; margin-top:6px; line-height:1.5; }
-  .estbox { font-size:12.5px; color:#4a3d12; background:var(--cautionbg); border:1px solid #e6d8a8;
-            border-radius:8px; padding:8px 11px; margin-top:6px; line-height:1.5; }
-  .estbox.off { color:#5a2f26; background:#f8ece9; border-color:#e3c2ba; }
+  /* 1단계 확정 배지(✓ 산술로 증명) vs 2단계 추정 배지(⚠ 근접 추측) — 모노톤(글리프로 구분) */
+  .confbox { font-size:12.5px; color:var(--ink); background:var(--panel); border:1px solid var(--line);
+             border-radius:10px; padding:8px 11px; margin-top:6px; line-height:1.5; }
+  .estbox { font-size:12.5px; color:var(--ink); background:var(--panel); border:1px solid var(--line);
+            border-radius:10px; padding:8px 11px; margin-top:6px; line-height:1.5; }
+  .estbox.off { color:var(--muted); background:var(--panel); border-color:var(--line); }
   .estbox .src { margin-left:6px; }
   .sliderbar { display:flex; align-items:center; gap:12px; margin:2px 0 14px; font-size:13px; color:var(--muted); }
-  .sliderbar input[type=range] { flex:1; }
+  .sliderbar input[type=range] { flex:1; accent-color:var(--ink); }
   .grouphd { font-size:13px; color:var(--muted); margin:18px 0 4px; padding-top:12px; border-top:1px solid var(--line); }
   /* 모달 */
-  .ov { position:fixed; inset:0; background:rgba(20,28,38,.5); display:none; align-items:center;
+  .ov { position:fixed; inset:0; background:rgba(26,26,26,.45); display:none; align-items:center;
         justify-content:center; padding:20px; z-index:10; }
   .ov.on { display:flex; }
-  .modal { background:#fff; border-radius:10px; max-width:680px; width:100%; padding:20px; max-height:84vh; overflow:auto; }
+  .modal { background:#fff; border:1px solid var(--line); border-radius:14px; max-width:680px; width:100%; padding:20px; max-height:84vh; overflow:auto;
+           box-shadow:0 10px 40px -12px rgba(20,20,20,.3); }
   .modal h3 { margin:0 0 4px; font-size:16px; padding-right:24px; }
   .modal .loc { color:var(--muted); font-size:13px; margin-bottom:10px; }
   .modal .cap { font-size:12px; color:var(--muted); margin:12px 0 4px; }
-  .modal .excerpt { background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:10px 14px;
+  /* JS 가 인라인으로 넣는 초록 캡션(#25603f)을 모노톤으로 덮어씀 — JS 무변경, CSS 로만 오버라이드 */
+  .modal .cap[style*="25603f"] { color:var(--ink) !important; }
+  .modal .excerpt { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:10px 14px;
                     font-size:13.5px; line-height:1.7; max-height:48vh; overflow:auto; }
   .modal .excerpt .exrow { padding:1.5px 0; }
-  .modal .excerpt .exrow.hlrow { background:#fffaf0; border-radius:3px; margin:0 -6px; padding:1.5px 6px; }
-  .modal .excerpt .gap { color:#9aa7b3; font-size:12px; text-align:center; padding:5px 0; user-select:none; }
+  .modal .excerpt .exrow.hlrow { background:#fff; border-radius:3px; margin:0 -6px; padding:1.5px 6px; }
+  .modal .excerpt .gap { color:var(--hint); font-size:12px; text-align:center; padding:5px 0; user-select:none; }
   .modal mark { background:var(--hl); color:inherit; padding:0 1px; border-radius:2px; }
   .modal .exbtn { margin-top:9px; }
   /* 영업이익 원문보기 — 재구성 손익계산서 */
   .istbl { width:100%; border-collapse:collapse; font-size:14px; margin:8px 0 4px; }
-  .istbl td { padding:7px 6px; border-bottom:1px solid #eef1f4; }
+  .istbl td { padding:7px 6px; border-bottom:1px solid var(--line); }
   .istbl .isop { color:var(--muted); width:34px; font-variant-numeric:tabular-nums; }
   .istbl .isval { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
   .istbl .isval .jo { color:var(--muted); font-weight:400; font-size:12px; margin-left:3px; }

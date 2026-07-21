@@ -2,50 +2,56 @@
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>삼성전자 이익의 질</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <style>
-  :root { --ink:#1c2530; --muted:#5b6b7b; --line:#d7dee6; --bg:#f4f6f9; --card:#fff;
-          --accent:#2f4a63; --pill:#eef2f6; --hl:#fde68a; --spark:#2f4a63; }
+  /* 디자인 시스템(모노톤): 잉크 #1a1a1a · 보조 #5f6764 · 힌트 #9aa19e · 테두리 #e5e7eb · 패널 #f7f8f8 ·
+     배경 #fff. 강조색·왼쪽 강조선·그라데이션 없음. 스파크라인은 단색(판정색 아님). 폰트 Pretendard.
+     * class/id·HTML·JS 무변경 — 스타일 값만 교체. */
+  :root { --ink:#1a1a1a; --muted:#5f6764; --hint:#9aa19e; --line:#e5e7eb; --bg:#ffffff; --card:#fff;
+          --panel:#f7f8f8; --accent:#1a1a1a; --pill:#eef0f0; --hl:#fde68a; --spark:#1a1a1a; }
   * { box-sizing:border-box; }
-  body { margin:0; font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Malgun Gothic",sans-serif;
-         color:var(--ink); background:var(--bg); }
+  body { margin:0; font:15px/1.6 "Pretendard",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Malgun Gothic",sans-serif;
+         color:var(--ink); background:var(--bg); -webkit-font-smoothing:antialiased; }
   .wrap { max-width:980px; margin:0 auto; padding:22px 18px 80px; }
-  h1 { font-size:22px; margin:0 0 2px; }
-  h2 { font-size:16px; margin:0 0 3px; }
+  h1 { font-size:22px; margin:0 0 2px; letter-spacing:-.01em; }
+  h2 { font-size:16px; margin:0 0 3px; letter-spacing:-.01em; }
   .sub { color:var(--muted); font-size:13px; margin-bottom:16px; }
   .pagenav { display:flex; gap:8px; margin:0 0 16px; font-size:13px; flex-wrap:wrap; }
-  .pagenav a, .pagenav span { border:1px solid var(--line); border-radius:20px; padding:5px 13px;
-      text-decoration:none; color:var(--accent); background:var(--card); }
+  .pagenav a, .pagenav span { border:1px solid var(--line); border-radius:999px; padding:5px 13px;
+      text-decoration:none; color:var(--ink); background:var(--card); }
   .pagenav .cur { background:var(--accent); color:#fff; border-color:var(--accent); font-weight:600; }
   .note { color:var(--muted); font-size:12.5px; line-height:1.7; margin:-6px 0 18px; }
   .note b { color:var(--ink); }
-  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:18px; margin:0 0 16px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; margin:0 0 16px;
+          box-shadow:0 1px 2px rgba(20,20,20,.04),0 8px 24px -18px rgba(20,20,20,.18); }
   .card .desc { color:var(--muted); font-size:13px; margin:2px 0 12px; }
   .num { font-variant-numeric:tabular-nums; }
   table.q { width:100%; border-collapse:collapse; font-size:13.5px; }
-  table.q th, table.q td { padding:7px 8px; border-bottom:1px solid #eef1f4; text-align:right;
+  table.q th, table.q td { padding:7px 8px; border-bottom:1px solid var(--line); text-align:right;
       font-variant-numeric:tabular-nums; white-space:nowrap; }
   table.q th { color:var(--muted); font-weight:600; border-bottom:1px solid var(--line); }
   table.q th:first-child, table.q td:first-child { text-align:left; }
   table.q tr.cum td { font-weight:700; border-top:2px solid var(--ink); }
-  table.q td.na { color:#9aa7b3; }
+  table.q td.na { color:var(--hint); }
   .metahd { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
   .spark { margin:4px 0 2px; }
   .srcrow { margin-top:11px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
   .srcrow .lbl { font-size:12px; color:var(--muted); }
-  .src { background:none; border:1px solid var(--line); color:var(--accent); border-radius:6px;
+  .src { background:none; border:1px solid var(--line); color:var(--ink); border-radius:8px;
          font-size:12px; padding:2px 9px; cursor:pointer; }
-  .src:hover { background:var(--pill); }
+  .src:hover { background:var(--panel); }
   .empty { color:var(--muted); font-size:13.5px; padding:6px 2px; }
   /* 모달 + 재구성 재무제표 표 */
-  .ov { position:fixed; inset:0; background:rgba(20,28,38,.5); display:none; align-items:center;
+  .ov { position:fixed; inset:0; background:rgba(26,26,26,.45); display:none; align-items:center;
         justify-content:center; padding:20px; z-index:10; }
   .ov.on { display:flex; }
-  .modal { background:#fff; border-radius:10px; max-width:640px; width:100%; padding:20px; max-height:84vh; overflow:auto; }
+  .modal { background:#fff; border:1px solid var(--line); border-radius:14px; max-width:640px; width:100%; padding:20px; max-height:84vh; overflow:auto;
+           box-shadow:0 10px 40px -12px rgba(20,20,20,.3); }
   .modal h3 { margin:0 0 4px; font-size:16px; padding-right:24px; }
   .modal .loc { color:var(--muted); font-size:13px; margin-bottom:10px; }
   .modal .x { float:right; border:none; background:none; font-size:22px; cursor:pointer; color:var(--muted); line-height:1; }
   .istbl { width:100%; border-collapse:collapse; font-size:14px; margin:8px 0 4px; }
-  .istbl td { padding:7px 6px; border-bottom:1px solid #eef1f4; }
+  .istbl td { padding:7px 6px; border-bottom:1px solid var(--line); }
   .istbl .isval { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
   .istbl .isval .jo { color:var(--muted); font-weight:400; font-size:12px; margin-left:3px; }
   .istbl tr.hl td { background:var(--hl); font-weight:700; }

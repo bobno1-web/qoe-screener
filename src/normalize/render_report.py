@@ -65,15 +65,18 @@ REPORT = r"""<!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>__TITLE__</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <style>
-  :root { --ink:#1c2530; --muted:#5b6b7b; --line:#d7dee6; --bg:#eef1f5; --card:#fff;
-          --accent:#2f4a63; --band:#22364a; }
+  /* 디자인 시스템(모노톤): 잉크 #1a1a1a · 보조 #5f6764 · 테두리 #e5e7eb · 배경 #fff. 강조색·왼쪽
+     강조선·그라데이션 없음. 폰트 Pretendard. * 배치·구조·JS(iframe 높이맞춤·모달보정) 무변경 — 스타일만. */
+  :root { --ink:#1a1a1a; --muted:#5f6764; --line:#e5e7eb; --bg:#ffffff; --card:#fff;
+          --accent:#1a1a1a; --band:#1a1a1a; }
   * { box-sizing:border-box; }
   html, body { margin:0; }
-  body { font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Malgun Gothic",sans-serif;
-         color:var(--ink); background:var(--bg); }
-  .topnav { position:sticky; top:0; z-index:50; background:rgba(255,255,255,.94);
-            -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); border-bottom:1px solid var(--line); }
+  body { font:15px/1.6 "Pretendard",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Malgun Gothic",sans-serif;
+         color:var(--ink); background:var(--bg); -webkit-font-smoothing:antialiased; }
+  .topnav { position:sticky; top:0; z-index:50; background:rgba(255,255,255,.9);
+            -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
   .topnav .inner { max-width:1040px; margin:0 auto; padding:9px 18px; display:flex;
                    align-items:center; gap:14px; flex-wrap:wrap; }
   .ident { display:flex; align-items:baseline; gap:9px; min-width:0; }
@@ -81,19 +84,19 @@ REPORT = r"""<!doctype html>
   .ident .code { font:12px ui-monospace,Consolas,monospace; color:var(--muted); font-weight:600; }
   .ident .yr { font-size:12px; color:var(--muted); font-weight:500; white-space:nowrap; }
   .jump { margin-left:auto; display:flex; gap:6px; }
-  .jump a { text-decoration:none; font-size:13px; color:var(--accent); border:1px solid var(--line);
-            background:#fff; border-radius:20px; padding:5px 13px; white-space:nowrap; }
-  .jump a:hover { border-color:var(--accent); }
+  .jump a { text-decoration:none; font-size:13px; color:var(--ink); border:1px solid var(--line);
+            background:#fff; border-radius:999px; padding:5px 13px; white-space:nowrap; }
+  .jump a:hover { border-color:var(--ink); }
   .jump a.active { background:var(--accent); color:#fff; border-color:var(--accent); }
   main { max-width:1040px; margin:0 auto; padding:0 14px 40px; }
   .sec { scroll-margin-top:56px; }
   .sechd { display:flex; align-items:center; gap:11px; margin:22px 4px 9px; }
-  .secno { width:26px; height:26px; border-radius:7px; background:var(--band); color:#fff;
+  .secno { width:26px; height:26px; border-radius:8px; background:var(--band); color:#fff;
            font-weight:700; font-size:14px; display:grid; place-items:center; flex:none; }
   .sechd .t { font-size:17px; font-weight:700; }
   .sechd .s { font-size:12.5px; color:var(--muted); }
-  .frame { width:100%; border:1px solid var(--line); border-radius:12px; background:var(--card);
-           display:block; min-height:600px; }
+  .frame { width:100%; border:1px solid var(--line); border-radius:14px; background:var(--card);
+           display:block; min-height:600px; box-shadow:0 1px 2px rgba(20,20,20,.04),0 10px 30px -22px rgba(20,20,20,.2); }
   .divider { display:flex; align-items:center; gap:14px; margin:30px 8px 6px; color:var(--muted);
              font-size:12.5px; }
   .divider::before, .divider::after { content:""; height:1px; background:var(--line); flex:1; }
