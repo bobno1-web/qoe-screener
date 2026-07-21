@@ -67,9 +67,9 @@ REPORT = r"""<!doctype html>
 <title>__TITLE__</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <style>
-  /* 디자인 시스템(모노톤): 잉크 #1a1a1a · 보조 #5f6764 · 테두리 #e5e7eb · 배경 #fff. 강조색·왼쪽
-     강조선·그라데이션 없음. 폰트 Pretendard. * 배치·구조·JS(iframe 높이맞춤·모달보정) 무변경 — 스타일만. */
-  :root { --ink:#1a1a1a; --muted:#5f6764; --line:#e5e7eb; --bg:#ffffff; --card:#fff;
+  /* 디자인 시스템(워밍 크림 · DART Lens 계열): 잉크 #1a1a1a · 보조 #6b675e · 테두리 #E7E3DA · 배경 #FBFAF6 · 카드 #fff.
+     강조 검정 · 왼쪽 강조선·그라데이션 없음. 폰트 Pretendard. * 배치·구조·JS(iframe 높이맞춤·모달보정) 무변경 — 스타일만. */
+  :root { --ink:#1a1a1a; --muted:#6b675e; --line:#E7E3DA; --bg:#FBFAF6; --card:#fff;
           --accent:#1a1a1a; --band:#1a1a1a; }
   * { box-sizing:border-box; }
   html, body { margin:0; }

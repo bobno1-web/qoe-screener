@@ -50,28 +50,28 @@ EXAMPLES = [
 # 랜딩·키입력·진행·회사입력이 공유하는 브랜드 요소. 결과 페이지(render*.py)는 별도로 자기 디자인 유지.
 REPO_URL = "https://github.com/bobno1-web/qoe-screener"
 
-# 돋보기 심볼(렌즈 원 + 가운데 채운 점 + 손잡이) — 블랙 단색. 브랜드바 인라인 SVG.
+# 돋보기 심볼(렌즈 원 + 가운데 채운 점 + 손잡이) — 검은 타일 위 흰 단색. 브랜드바 인라인 SVG.
 BRAND_SVG = (
-    '<svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2" '
+    '<svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" '
     'stroke-linecap="round" stroke-linejoin="round">'
     '<circle cx="10.5" cy="10.5" r="6"></circle>'
     '<line x1="15.4" y1="15.4" x2="20" y2="20"></line>'
-    '<circle cx="10.5" cy="10.5" r="1.7" fill="#1a1a1a" stroke="none"></circle>'
+    '<circle cx="10.5" cy="10.5" r="1.7" fill="#ffffff" stroke="none"></circle>'
     "</svg>"
 )
-# 같은 돋보기 심볼(흰 둥근 타일 + 블랙 글래스) — favicon data URI SVG.
+# 같은 돋보기 심볼(검은 둥근 타일 + 흰 글래스) — favicon data URI SVG.
 FAVICON = (
     "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>"
-    "<rect width='24' height='24' rx='6' fill='%23ffffff'/>"
-    "<g fill='none' stroke='%231a1a1a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>"
+    "<rect width='24' height='24' rx='6' fill='%231a1a1a'/>"
+    "<g fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>"
     "<circle cx='10.5' cy='10.5' r='6'/><line x1='15.4' y1='15.4' x2='20' y2='20'/></g>"
-    "<circle cx='10.5' cy='10.5' r='1.7' fill='%231a1a1a'/></svg>"
+    "<circle cx='10.5' cy='10.5' r='1.7' fill='%23ffffff'/></svg>"
 )
 
 
 # ── 공용 셸(디자인) ────────────────────────────────────────────────
-# 모노톤: 잉크 #1a1a1a · 보조 #5f6764 · 힌트 #9aa19e · 테두리 #e5e7eb · 패널 #f7f8f8 · 배경 #fff.
-# 강조색 없음(버튼은 블랙). 왼쪽 강조선·그라데이션 금지. 음수 금액만 #b4462b. 폰트 Pretendard.
+# 워밍 크림(DART Lens 계열): 잉크 #1a1a1a · 보조 #6b675e · 힌트 #9c988d · 테두리 #E7E3DA · 크림 패널 #F5F1E8 · 배경 #FBFAF6.
+# 버튼·로고 타일은 블랙. 왼쪽 강조선·그라데이션 금지. 음수 금액만 #b4462b. 폰트 Pretendard.
 _SHELL = """<!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -80,9 +80,9 @@ _SHELL = """<!doctype html>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <style>
   :root{{
-    --ink:#1a1a1a; --ink-soft:#5f6764; --line:#e5e7eb; --line-2:#f0f1f1;
-    --bg:#ffffff; --card:#ffffff; --panel:#f7f8f8; --accent:#1a1a1a; --accent-soft:#f2f3f3;
-    --good:#1a1a1a; --warn:#9aa19e; --bad:#b4462b; --mute:#9aa19e;
+    --ink:#1a1a1a; --ink-soft:#6b675e; --line:#E7E3DA; --line-2:#ECE7DC;
+    --bg:#FBFAF6; --card:#ffffff; --panel:#F5F1E8; --accent:#1a1a1a; --accent-soft:#ECE4D3;
+    --good:#1a1a1a; --warn:#9c988d; --bad:#b4462b; --mute:#9c988d;
   }}
   *{{box-sizing:border-box}}
   body{{margin:0;background:var(--bg);color:var(--ink);
@@ -90,11 +90,11 @@ _SHELL = """<!doctype html>
     line-height:1.6;-webkit-font-smoothing:antialiased}}
   /* 상단 브랜드바 — 전 진입 화면 공유(돋보기 로고 + 브랜드명) */
   .topbar{{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;
-    padding:12px 20px;background:rgba(255,255,255,.9);backdrop-filter:saturate(1.2) blur(8px);
+    padding:12px 20px;background:rgba(251,250,246,.85);backdrop-filter:saturate(1.2) blur(8px);
     border-bottom:1px solid var(--line)}}
   .brand{{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}}
-  .brand-mark{{width:30px;height:30px;border-radius:9px;background:#fff;border:1px solid var(--line);
-    display:grid;place-items:center;box-shadow:0 1px 2px rgba(20,20,20,.05)}}
+  .brand-mark{{width:30px;height:30px;border-radius:9px;background:var(--ink);border:1px solid var(--ink);
+    display:grid;place-items:center;box-shadow:0 1px 2px rgba(20,20,20,.12)}}
   .brand-mark svg{{width:18px;height:18px;display:block}}
   .brand-name{{font-size:16px;font-weight:700;letter-spacing:-.01em}}
   .brand-tag{{margin-left:auto;font-size:12.5px;color:var(--mute)}}
@@ -166,7 +166,7 @@ def page(title, body, script=""):
 
 
 # ── 랜딩(진입 라우트) ──────────────────────────────────────────────
-# 확정된 모노톤 디자인. "시작하기"는 기존 진입 흐름(/start → 키 없으면 키입력)으로 잇는다.
+# 확정된 워밍 크림 디자인(DART Lens 계열). "시작하기"는 기존 진입 흐름(/start → 키 없으면 키입력)으로 잇는다.
 # 히어로 카드 안의 숫자는 데모 예시(정적) — 실제 계산과 무관한 시각 요소.
 _LANDING = """<!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
@@ -176,8 +176,8 @@ _LANDING = """<!doctype html>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <style>
   :root{
-    --ink:#1a1a1a; --ink-soft:#5f6764; --mute:#9aa19e;
-    --line:#e5e7eb; --panel:#f7f8f8; --bg:#ffffff; --neg:#b4462b;
+    --ink:#1a1a1a; --ink-soft:#6b675e; --mute:#9c988d;
+    --line:#E7E3DA; --panel:#F5F1E8; --bg:#FBFAF6; --neg:#b4462b;
     --shadow:0 1px 2px rgba(20,20,20,.04),0 10px 30px -20px rgba(20,20,20,.22);
     --shadow-lg:0 1px 2px rgba(20,20,20,.05),0 20px 46px -24px rgba(20,20,20,.26);
   }
@@ -190,10 +190,10 @@ _LANDING = """<!doctype html>
   /* 상단 브랜드바 */
   nav{display:flex;align-items:center;justify-content:space-between;height:66px;
     border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;
-    background:rgba(255,255,255,.9);backdrop-filter:saturate(1.2) blur(8px)}
+    background:rgba(251,250,246,.85);backdrop-filter:saturate(1.2) blur(8px)}
   .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;letter-spacing:-.01em}
-  .logo-mark{width:30px;height:30px;border-radius:9px;background:#fff;border:1px solid var(--line);
-    display:grid;place-items:center;box-shadow:0 1px 2px rgba(20,20,20,.05)}
+  .logo-mark{width:30px;height:30px;border-radius:9px;background:var(--ink);border:1px solid var(--ink);
+    display:grid;place-items:center;box-shadow:0 1px 2px rgba(20,20,20,.12)}
   .logo-mark svg{width:18px;height:18px;display:block}
   .nav-links{display:flex;align-items:center;gap:26px}
   .nav-links a{color:var(--ink-soft);font-size:14.5px;font-weight:500}
@@ -203,7 +203,7 @@ _LANDING = """<!doctype html>
 
   /* 히어로 */
   .hero{padding:82px 0 60px;text-align:center}
-  .eyebrow{display:inline-block;background:#fff;border:1px solid var(--line);color:var(--ink-soft);
+  .eyebrow{display:inline-block;background:#ECE4D3;border:1px solid #E4D9C0;color:#8f7240;
     font-size:12.5px;font-weight:600;padding:6px 14px;border-radius:999px;margin-bottom:24px;box-shadow:var(--shadow)}
   h1{font-size:clamp(2rem,5vw,3.35rem);font-weight:800;letter-spacing:-.035em;line-height:1.18;margin-bottom:20px}
   .sub{font-size:clamp(1rem,2.2vw,1.18rem);color:var(--ink-soft);max-width:600px;margin:0 auto 34px;line-height:1.7}
@@ -261,8 +261,8 @@ _LANDING = """<!doctype html>
   .step{padding-top:6px}
   .step-n{font-size:13.5px;font-weight:700;color:var(--ink-soft);margin-bottom:13px;
     display:flex;align-items:center;gap:9px}
-  .step-n b{width:29px;height:29px;border-radius:9px;background:#fff;border:1px solid var(--line);
-    display:grid;place-items:center;font-size:13.5px;color:var(--ink)}
+  .step-n b{width:29px;height:29px;border-radius:9px;background:var(--ink);border:1px solid var(--ink);
+    display:grid;place-items:center;font-size:13.5px;color:#fff}
   .step h4{font-size:17px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
   .step p{font-size:14.5px;color:var(--ink-soft);line-height:1.7}
 
